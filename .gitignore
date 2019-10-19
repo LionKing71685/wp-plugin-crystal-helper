@@ -1,0 +1,29 @@
+.DS_Store
+.floo
+.flooignore
+.idea/
+dploy.yaml
+npm-debug.log
+sftp-config.json
+sublime-sftp.json
+desktop.ini
+
+# generated files and folders
+bower_components
+build
+configbuilder/assets/parts.json
+node_modules
+src/bower_components
+dashboard/assets/images/parts
+dashboard/assets/images/themes
+dashboard/assets/data/build.json
+dashboard/assets/data/themes.json
+dashboard/assets/data/parts.json
+
+# files and folders for testing
+testing
+testing.json
+src/parts/test
+src/themes/ross
+src/themes/test
+npm-debug.log
