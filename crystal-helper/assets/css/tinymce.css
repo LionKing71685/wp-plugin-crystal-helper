@@ -60,15 +60,15 @@
 }
 
 .crystal-catalog-helper>.remove {
-    background: url('/wp-content/plugins/crystal-helper/assets/img/failure.png') center center no-repeat white;
-    border-radius: 3px;
-    border:1px solid #cc0011;
-    display:none;
-    height:24px;
-    left: 2px;
-    position:absolute;
+    display: none;
+    position: absolute;
+    width: 24px;
+    height: 24px;
     top: 2px;
-    width:24px;
+    left: 2px;
+    background: url('https://firebasestorage.googleapis.com/v0/b/mobiledatingapp.appspot.com/o/failure.png?alt=media&token=25ff9f27-54ce-47bc-8ff8-77de46fb6895') center center no-repeat white;
+    border-radius: 3px;
+    border: 1px solid #cc0011;
 }
 
 .crystal-catalog-helper:hover>.remove {

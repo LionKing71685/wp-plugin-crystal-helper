@@ -2,12 +2,10 @@
 //TODO: Use a base class and extend it to single/grid/list.  This code is a mess - my apologies!
 //TODO: Standardize on "descriptors.name" instead of "product.name"
 
-;
 var CrystalCatalogHelper;
 (function ($, CrystalCatalogHelper) {
 
 	/* ==== Constants ==== */
-
 	baseClass = 'crystal-catalog-helper';
 	version = '3.0.1';
 
@@ -157,6 +155,7 @@ var CrystalCatalogHelper;
 			var productTypeIdElem = $('.' + modalClass + ' [name=productTypeId]:first');
 			if (productTypeIdElem.length && productTypeIdElem.val()) productTypeId = parseInt(productTypeIdElem.val());
 
+			
 
 			//init single form
 			CrystalCatalogHelper.initModal({
@@ -289,7 +288,6 @@ var CrystalCatalogHelper;
 								}));
 
 							}
-
 						}, function (error) {
 							// See the Errors section for a note on errors
 							errorElem.html('Sorry, there was an error: ' + error.description);
@@ -381,6 +379,12 @@ var CrystalCatalogHelper;
 
 	});
 
+	var Modal = {
+		modalFlag: 0,
+		modalCount: 0,
+	}
+
+	CrystalCatalogHelper.Modal = Modal;
 
 	/* ============== Single Layout ============= */
 
@@ -480,7 +484,6 @@ var CrystalCatalogHelper;
 			$('.preview-name', modal).html('');
 			$('.preview-image', modal).html('');
 
-
 		},
 
 		autoCompleteSelect: function (result) {
@@ -490,7 +493,6 @@ var CrystalCatalogHelper;
 			var previewName = $('.preview-name', modal);
 			var previewImage = $('.preview-image', modal);
 			var searchField = $('.search', modal);
-
 
 			//set display text (if no custom text was specified)
 			if (!Single.selectedText || !displayText.val()) {
@@ -520,7 +522,6 @@ var CrystalCatalogHelper;
 						//TODO: why would we error
 
 					});
-
 			}
 
 			searchField.typeahead('val', '').focus();
@@ -532,21 +533,31 @@ var CrystalCatalogHelper;
 			Single.displayText = $('#' + Single.modalId + ' [name=displayText]').val();
 
 			var formattedResults = Single.format();
-
+			//console.log("Modal submit 1");
+			// console.log("inserted product dom:", formattedResults);
 			if (formattedResults) {
-
 				//insert into first editor on the page
 				//TODO: hack - fix this
-				var editor = tinyMCE.editors[0];
-
-				if (Single.originalElem) {
-					Single.originalElem.replaceWith(formattedResults);
-				} else {
-					editor.selection.setContent(formattedResults);
+				if(tinyMCE.editors.length != 0) {
+					var editor = tinyMCE.editors[0];
+					// console.log("editor: ", tinyMCE.editors[0]);
+					// console.log("result: ", formattedResults);
+					if (Single.originalElem) {
+						Single.originalElem.replaceWith(formattedResults);
+						//console.log("Modal submit 2");
+					} else {
+						//console.log("Modal submit 2.5");
+						editor.editorCommands.execCommand('mceFocus',true,editor.id);
+						//console.log("Modal submit 2.6");
+						editor.selection.setContent(formattedResults);
+						//console.log("Modal submit 3");
+					}
+					// Single.modalFlag = (Single.modalFlag + 1) % 2;
 				}
 
 			}
 
+			//console.log("Modal submit 4");
 			Single.close();
 
 		},
@@ -556,7 +567,7 @@ var CrystalCatalogHelper;
 			if (!Single.product) {
 				return null;
 			}
-
+			//console.log("Modal  6");
 			var name = Single.product.name;
 			var url = getProductUrl(Single.product.id);
 
@@ -591,6 +602,7 @@ var CrystalCatalogHelper;
 		}
 
 	};
+
 	CrystalCatalogHelper.Single = Single;
 
 
@@ -923,14 +935,16 @@ var CrystalCatalogHelper;
 
 				//insert into first editor on the page
 				//TODO: hack - fix this
-				var editor = tinyMCE.editors[0];
+				if(tinyMCE.editors.length != 0) {
+					var editor = tinyMCE.editors[0];
 
-				if (List.originalElem) {
-					List.originalElem.replaceWith(formattedResults);
-				} else {
-					editor.selection.setContent(formattedResults + '<p>&nbsp;</p>');
+					if (List.originalElem) {
+						List.originalElem.replaceWith(formattedResults);
+					} else {
+						editor.editorCommands.execCommand('mceFocus',false,editor.id);
+						editor.selection.setContent(formattedResults + '<p>&nbsp;</p>');
+					}
 				}
-
 			}
 
 			List.close();
@@ -1453,12 +1467,15 @@ var CrystalCatalogHelper;
 
 				//insert into first editor on the page
 				//TODO: hack - fix this
-				var editor = tinyMCE.editors[0];
+				if(tinyMCE.editors.length != 0) {
+					var editor = tinyMCE.editors[0];
 
-				if (Grid.originalElem) {
-					Grid.originalElem.replaceWith(formattedResults);
-				} else {
-					editor.selection.setContent(formattedResults + '<p>&nbsp;</p>');
+					if (Grid.originalElem) {
+						Grid.originalElem.replaceWith(formattedResults);
+					} else {
+						editor.editorCommands.execCommand('mceFocus', false, editor.id);
+						editor.selection.setContent(formattedResults + '<p>&nbsp;</p>');
+					}
 				}
 
 			}

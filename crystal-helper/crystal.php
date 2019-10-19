@@ -84,6 +84,12 @@ if(!class_exists('Crystal_Catalog_Helper')) {
 			add_action('wp_ajax_fetch_template', array(&$this, 'fetchTemplateCallback'));
 			add_action('wp_ajax_fetch_templates', array(&$this, 'fetchTemplatesCallback'));
 
+			// ADD NEW CATEGORY (Crystal Helper)
+			add_filter( 'block_categories', array(&$this, 'customCrystalHelperCategoryCallBack'), 10, 2);
+
+			// LOAD CRYSTAL HELPER BLOCKS
+			add_action('enqueue_block_editor_assets', array(&$this, 'loadCrystalHelperCategoryBlocks'));
+
 		}
 
 		// LOAD PLUGIN ASSETS FOR ADMIN
@@ -174,6 +180,7 @@ if(!class_exists('Crystal_Catalog_Helper')) {
 		// LOAD CUSTOM TINYMCE PLUGIN
 		function crystalTinyMCE($plugin_array) {
 
+			
 			// ADD OUR CUSTOM PLUGIN TO TINYMCE'S PLUGIN ARRAY
 			$plugin_array['crystalCatalogHelper'] = plugin_dir_url(__FILE__) . 'assets/scripts/tinymce.js';
 
@@ -234,9 +241,47 @@ if(!class_exists('Crystal_Catalog_Helper')) {
 
 		}
 
+		// Crystal Helper Category
+		function customCrystalHelperCategoryCallBack( $categories, $post ) {
+			return array_merge(
+				$categories,
+				array(
+					array(
+						'slug' => 'crystal-helper',
+						'title' => __( 'Crystal Helper', 'crystal-helper' ),
+					),
+				)
+			);
+		}
+		// Add layout blocks to Crystal Helper Category
+		function loadCrystalHelperCategoryBlocks() {
+			wp_enqueue_script(
+				'single-block',
+				plugin_dir_url(__FILE__) . 'assets/scripts/blocks/single-block.js',
+				array('wp-blocks'),
+				true
+			);
+		  
+			wp_enqueue_script(
+				'list-block',
+				plugin_dir_url(__FILE__) . 'assets/scripts/blocks/list-block.js',
+				array('wp-blocks'),
+				true
+			);
+		  
+			wp_enqueue_script(
+				'grid-block',
+				plugin_dir_url(__FILE__) . 'assets/scripts/blocks/grid-block.js',
+				array('wp-blocks'),
+				true
+			);
+		}
+
+
 	}
 
 	// INVOKE OUR NEW CLASS TO FIRE THINGS UP
+	
 	$crystalCatalogHelper = new Crystal_Catalog_Helper();
 
 }
